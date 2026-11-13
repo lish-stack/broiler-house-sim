@@ -1,0 +1,42 @@
+# Mid values for model inputs that are NOT regulatory thresholds. Each has a status and a low/high range in config/ranges.yaml.
+# Status: Sourced = value taken from a published measurement (see source) | Derived = my arithmetic on a published figure
+#         | Assumption = no published value found; range is a judgement and every result must hold across it.
+
+house:
+  floor_area_m2: 1000             # scale choice only (density is what matters)
+  initial_weight_g: 44            # Ross 308 table, day 0
+
+physics:
+  total_heat_w_per_kg: 6.1        # Sourced (single study, Genc & Portier 2005, 24.8 C / 71% RH: sensible 2.1 + latent 4.0 W/kg). Partial: one condition only
+  sensible_fraction: 0.34         # Derived: 2.1 / 6.1. Fraction rises when cooler; range in ranges.yaml
+  air_heat_capacity_wh_m3_k: 0.34 # physical constant
+  min_ventilation_m3h_bird: 0.3   # Assumption (Aviagen minimum-ventilation table not yet transcribed)
+
+cooling:
+  pad_drop_c: 5.0                 # Partial: pads cool incoming air ~4-8 C when dry, ~1-2 C below 27 C outside; RH limit not modelled
+  pad_threshold_outside_c: 27.0
+  pad_fan_energy_mult: 1.15       # Assumption (extra static pressure through pads)
+
+mortality:
+  baseline_daily_fraction: 0.00092  # Derived: 3.82% mean total mortality (2,309 EU flocks, 7 states, 2016) -> 1-(1-0.0382)^(1/42)
+  heat_per_degree_excess: 0.003     # Assumption (anchor: secondary source, one very hot day can exceed ~1.2%)
+  cold_per_degree_below: 0.001      # Assumption
+  light_mortality_rel_per_hour: 0.0676  # Derived: Schwean-Lardner 38 d trial 3.33/3.74/4.97/6.11% at 14/17/20/23 L; slope 0.309 pp/h relative to 18 L value 4.57%
+
+growth:
+  heat_gain_penalty_per_degree: 0.021   # Sourced: meta-analysis, 2.1% lower gain per C above upper critical temp (>21 d)
+  cold_gain_penalty_per_degree: 0.01    # Assumption
+  light_over_20_penalty_per_hour: 0.015 # Assumption (direction sourced: growth peaks ~20 L, falls at 23 L)
+  light_under_17_penalty_per_hour: 0.02 # Assumption (direction sourced; before day 35)
+  feed_mult_per_dark_hour_over_4: -0.004 # Assumption (direction sourced: FCR best at 14 L)
+
+heat:
+  density_ceiling_penalty_c_per_kg_m2_over_11: 0.05  # Assumption: EFSA says density raises heat risk, gives no number; studies conflict (some find no effect at 15 vs 20 birds/m2)
+
+economics:
+  chick_cost_per_bird: 0.55         # Assumption (scenario value)
+  feed_cost_per_kg: 0.40            # Assumption (scenario value)
+  live_price_per_kg: 1.60           # Assumption (scenario value)
+  electricity_per_kwh: 0.15         # Assumption (scenario value)
+  fan_kwh_per_1000_m3: 0.0294       # Derived: BESS-tested fans ~20 cfm/W at 0.10 in water = 34 m3/h per W
+  heating_efficiency: 0.9           # Assumption

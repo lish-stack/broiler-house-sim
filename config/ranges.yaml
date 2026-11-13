@@ -1,0 +1,20 @@
+# Low/high for each sweepable input. key prefix A: = assumptions.yaml, P: = parameters.yaml. mid = value in the config file.
+- {key: "A:physics.total_heat_w_per_kg", low: 5.0, high: 8.0, status: Assumption-range, note: "mid is one measurement; range is judgement"}
+- {key: "A:physics.sensible_fraction", low: 0.30, high: 0.50, status: Assumption-range}
+- {key: "A:physics.min_ventilation_m3h_bird", low: 0.15, high: 0.6, status: Assumption-range}
+- {key: "A:cooling.pad_drop_c", low: 0.0, high: 8.0, status: Partial, note: "4-8 C when dry; 0 = no pads"}
+- {key: "A:mortality.baseline_daily_fraction", low: 0.00065, high: 0.0012, status: Sourced-range, note: "2.7% (German Ross flocks, 37 d) to ~5% total"}
+- {key: "A:mortality.heat_per_degree_excess", low: 0.001, high: 0.006, status: Assumption-range}
+- {key: "A:mortality.cold_per_degree_below", low: 0.0003, high: 0.003, status: Assumption-range}
+- {key: "A:mortality.light_mortality_rel_per_hour", low: 0.034, high: 0.101, status: Derived-range, note: "x0.5 to x1.5"}
+- {key: "A:growth.heat_gain_penalty_per_degree", low: 0.014, high: 0.03, status: Sourced-range}
+- {key: "A:growth.cold_gain_penalty_per_degree", low: 0.005, high: 0.02, status: Assumption-range}
+- {key: "A:growth.light_over_20_penalty_per_hour", low: 0.0075, high: 0.03, status: Assumption-range}
+- {key: "A:growth.light_under_17_penalty_per_hour", low: 0.01, high: 0.04, status: Assumption-range}
+- {key: "A:growth.feed_mult_per_dark_hour_over_4", low: -0.008, high: 0.0, status: Assumption-range}
+- {key: "A:heat.density_ceiling_penalty_c_per_kg_m2_over_11", low: 0.0, high: 0.1, status: Assumption-range, note: "0 = studies finding no density effect"}
+- {key: "A:economics.fan_kwh_per_1000_m3", low: 0.024, high: 0.041, status: Sourced-range, note: "BESS 24.5 to 14.3 cfm/W"}
+- {key: "A:economics.feed_cost_per_kg", low: 0.28, high: 0.52, status: Assumption-range}
+- {key: "A:economics.live_price_per_kg", low: 1.1, high: 2.1, status: Assumption-range}
+- {key: "A:economics.electricity_per_kwh", low: 0.10, high: 0.30, status: Assumption-range}
+- {key: "P:dynamics.ammonia.emission_g_per_bird_day_per_day_of_age", low: 0.0045, high: 0.038, status: Sourced-range, note: "low derived from Teagasc 24.1 g/bird-place/yr (~7 cycles); 0.014 Harper CA; 0.028-0.038 Wheeler US built-up litter"}
