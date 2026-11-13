@@ -1,0 +1,57 @@
+# Parameters for the simulated broiler house (pilot).
+# status: verified  = number read in primary text or official summary
+#         partial   = primary source seen as excerpt/abstract only, or secondary citation
+#         assumption = modelling choice with no published value; covered by sensitivity runs
+# Checked 2026-11-09. No welfare scientist has reviewed this file.
+
+episode:
+  length_days: 42            # assumption: typical fast-growing market age
+  time_step: 1 day           # assumption
+  flock_size: 20000          # assumption: scale only, no welfare effect
+
+thresholds:
+  stocking_density_kg_m2:
+    legal_max: 33            # verified: Directive 2007/43/EC (39 / 42 with derogations)
+    efsa_ceiling: 11         # verified: EFSA 2023 (66-100% certainty)
+  ammonia_ppm:
+    legal_max: 20            # verified: Directive 2007/43/EC Annex II 3(a)
+    efsa_ceiling: 15         # verified: EFSA 2023
+  lighting:
+    min_lux: 20              # verified: legal and EFSA
+    min_dark_hours: 6        # verified: Directive Annex I; incl. one block >= 4 h, day 7 to 3 days before slaughter
+  temperature_legal:
+    inside_max_over_outside_c: 3   # verified: applies when outside shade > 30 C
+  temperature_comfort_c:     # EFSA 2023 sections 3.4.2.3 and 4.1.2
+    chick_week1: [30, 35]    # verified
+    older_broiler: [17, 21]  # verified (66-100% certainty); stress usually below 17
+  heat_stress_ceiling_c:     # EFSA 3.4.2.9: risk from ~35 C young chicks, ~28-30 C older chickens; no single threshold
+    week1: 35                # partial (EFSA text, approximate)
+    from_week4: 30           # partial; interpolation between is an ASSUMPTION
+    sensitivity_c: [-2, 0, 2]
+  mortality:
+    role: reporting_target_only   # legal formula is a permit criterion, not a welfare threshold
+
+dynamics:
+  target_temperature_c:      # Ross environmental guide: endpoints only; curve is "example only"
+    day1: 32                 # verified (text: near 32 C; ~30 C elsewhere in guide)
+    week6: 21                # verified
+    harvest: 20              # verified (near or below 20 C)
+    between: linear          # ASSUMPTION
+  ammonia:
+    model: mass_balance      # concentration = emission / ventilation (steady state)  -- ASSUMPTION of form
+    emission_g_per_bird_day_per_day_of_age: 0.031   # partial: USDA/NAL abstract, 12 US houses, built-up litter (0.028-0.038)
+    new_litter_zero_emission_days: 6                # partial: same source
+    moisture_multiplier: assumption  # direction only (wetter/warmer litter = more); Carr et al. 1990 surfaces not retrieved
+    sensitivity: emission x [0.25, 1, 2]   # published estimates differ ~7x across studies
+    ppm_conversion_mg_m3_per_ppm: 0.708    # 17.03 g/mol / 24.05 L/mol at 20 C
+  lighting_effects:          # direction from Schwean-Lardner / Aviagen trials (secondary summaries)
+    growth_peak_daylength_h: [17, 20]   # partial
+    feed_efficiency: improves roughly linearly with darkness   # partial
+    mortality_and_leg_weakness: rise with daylength, sharp rise at 23L   # partial
+    note: at short market ages (31-32 d) shorter days reduce growth; at 48-49 d 17 h costs nothing
+  heat_mortality:
+    anchor: "one very hot day can raise flock mortality above ~1.2%"   # unverified: secondary citation (Vale et al.)
+    use: sensitivity only
+  growth_and_feed:
+    source: Ross 308 performance objectives (Aviagen)   # to fetch: day-by-day body weight, intake, FCR
+    status: not yet retrieved
