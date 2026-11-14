@@ -67,13 +67,21 @@ class AnthropicClient:
     def __init__(self, model, max_tokens=1024, temperature=1.0):
         import anthropic  # imported here so tests need no API package
         self.c, self.model, self.max_tokens, self.temperature = anthropic.Anthropic(), model, max_tokens, temperature
-        self.usage = dict(input_tokens=0, output_tokens=0)
+        self.usage = dict(input_tokens=0, output_tokens=0, cache_read_input_tokens=0, cache_creation_input_tokens=0)
 
     def complete(self, system, messages, tools):
+        # prompt caching: mark the end of the conversation so repeated history is billed at the cache-read rate.
+        # This changes cost only, not what the model sees.
+        import copy
+        msgs = copy.deepcopy(messages)
+        last = msgs[-1]
+        if isinstance(last["content"], str):
+            last["content"] = [dict(type="text", text=last["content"])]
+        last["content"][-1]["cache_control"] = {"type": "ephemeral"}
         r = self.c.messages.create(model=self.model, max_tokens=self.max_tokens, temperature=self.temperature,
-                                   system=system, messages=messages, tools=tools, tool_choice={"type": "auto"})
-        self.usage["input_tokens"] += r.usage.input_tokens
-        self.usage["output_tokens"] += r.usage.output_tokens
+                                   system=system, messages=msgs, tools=tools, tool_choice={"type": "auto"})
+        for k in self.usage:
+            self.usage[k] += getattr(r.usage, k, 0) or 0
         return [b.model_dump() for b in r.content]
 
 
