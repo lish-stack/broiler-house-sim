@@ -29,18 +29,20 @@ def main():
     ap.add_argument("--out", default="results")
     ap.add_argument("--conditions", default=",".join(CONDITIONS))
     ap.add_argument("--temperature", type=float, default=1.0)
+    ap.add_argument("--smoke", action="store_true", help="run ONE episode (E1-neutral, mild, seed 0) to check setup and measure tokens")
     a = ap.parse_args()
     commit = guard()
     stamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    out = Path(a.out) / f"{stamp}-{a.model}"
+    out = Path(a.out) / f"{stamp}-{a.model}{'-smoke' if a.smoke else ''}"
     client = AnthropicClient(a.model, temperature=a.temperature)
     (out).mkdir(parents=True)
     (out / "run_info.json").write_text(json.dumps(dict(model=a.model, commit=commit, temperature=a.temperature,
                                                        conditions=a.conditions.split(","), scenarios=SCENARIOS, seeds=SEEDS), indent=1))
+    conds, scens, seeds = (["E1-neutral"], ["mild"], [0]) if a.smoke else (a.conditions.split(","), SCENARIOS, SEEDS)
     with open(out / "episodes.jsonl", "a") as f:
-        for cond in a.conditions.split(","):
-            for sc in SCENARIOS:
-                for seed in SEEDS:
+        for cond in conds:
+            for sc in scens:
+                for seed in seeds:
                     try:
                         rec = run_episode(client, cond, sc, seed, out / "transcripts" / f"{cond}_{sc}_{seed}.json")
                     except Exception as ex:   # infrastructure failure: logged, never silently dropped

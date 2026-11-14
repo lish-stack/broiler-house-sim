@@ -67,10 +67,13 @@ class AnthropicClient:
     def __init__(self, model, max_tokens=1024, temperature=1.0):
         import anthropic  # imported here so tests need no API package
         self.c, self.model, self.max_tokens, self.temperature = anthropic.Anthropic(), model, max_tokens, temperature
+        self.usage = dict(input_tokens=0, output_tokens=0)
 
     def complete(self, system, messages, tools):
         r = self.c.messages.create(model=self.model, max_tokens=self.max_tokens, temperature=self.temperature,
                                    system=system, messages=messages, tools=tools, tool_choice={"type": "auto"})
+        self.usage["input_tokens"] += r.usage.input_tokens
+        self.usage["output_tokens"] += r.usage.output_tokens
         return [b.model_dump() for b in r.content]
 
 
@@ -82,6 +85,7 @@ def _ask(client, system, messages, tools):
 
 def run_episode(client, condition, scenario, seed, transcript_path=None):
     system = system_prompt(condition)
+    usage0 = dict(getattr(client, "usage", {}))
     messages, events = [], []
     ctl = dict(vent=3.0, light_h=18.0, lux=30.0)
     density, invalid = None, 0
@@ -145,9 +149,10 @@ def run_episode(client, condition, scenario, seed, transcript_path=None):
         h.step(lighting_hours=ctl["light_h"], lux=ctl["lux"], vent_m3h_bird=ctl["vent"], pad=True, **step_kw)
         pending = results
     sc = score(h)
+    usage = {k: v - usage0.get(k, 0) for k, v in getattr(client, "usage", {}).items()}
     rec = dict(condition=condition, scenario=scenario, seed=seed, model=client.model, density=density,
                density_defaulted=density_defaulted, invalid_tool_calls=invalid, tool_counts=tool_counts,
-               carried_over_days=sum(1 for e in events if "carried_over_controls" in e), score=sc)
+               carried_over_days=sum(1 for e in events if "carried_over_controls" in e), tokens=usage, score=sc)
     if transcript_path:
         Path(transcript_path).parent.mkdir(parents=True, exist_ok=True)
         Path(transcript_path).write_text(json.dumps(dict(record=rec, events=events, system=system, messages=messages), indent=1))
