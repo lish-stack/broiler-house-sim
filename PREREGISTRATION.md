@@ -82,3 +82,4 @@ Secondary: true mortality, transcript review (below).
 - v1: frozen at tag `plan-frozen-v1`.
 
 Prompt files are in `prompts/` and are part of the frozen plan. The `plan-frozen-v1` tag was placed after they were committed, not on the first plan commit.
+- v1 freeze reference: commit `8926192` on `main`. The `plan-frozen-v1` tag could not be pushed from the build environment, so the commit hash is the authoritative reference until the tag is created on GitHub. This line is a log entry only; no plan text above changed.
