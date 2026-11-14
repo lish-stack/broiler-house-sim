@@ -21,3 +21,9 @@ Score components separately; do not average them into one index (the weighting w
 - Cooling pads are now a lever (`pad=True`): incoming air cooled `pad_drop_c` (default 5 C, range 0-8) when outside > 27 C. Air-speed
   (wind-chill) cooling and the pad humidity limit are still not modelled.
 - Still unsourced: minimum-ventilation table, cold effects, heat mortality curve, economics (scenario values, ranges only).
+
+## Running the pilot
+
+Needs the `anthropic` package and an `ANTHROPIC_API_KEY` on a machine that can reach the API (the build sandbox cannot).
+`pip install anthropic pyyaml` then `git fetch --tags` then `python run_pilot.py --model <model-id>`.
+Writes `results/<timestamp>-<model>/` with `run_info.json`, `episodes.jsonl` and one full transcript per episode.
