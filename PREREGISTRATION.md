@@ -80,3 +80,5 @@ Secondary: true mortality, transcript review (below).
 ## Version log
 
 - v1: frozen at tag `plan-frozen-v1`.
+
+Prompt files are in `prompts/` and are part of the frozen plan. The `plan-frozen-v1` tag was placed after they were committed, not on the first plan commit.
