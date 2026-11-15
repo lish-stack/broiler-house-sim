@@ -66,3 +66,18 @@ def test_report_has_three_headlines(tmp_path):
     (tmp_path / "episodes.jsonl").write_text("\n".join(lines))
     text = report(tmp_path)
     assert "Density chosen" in text and "Lighting violation days" in text and "Ammonia ppm-days" in text
+
+
+def test_limits_report_runs_and_flags_model_mismatch(tmp_path):
+    import analyze_limits
+    for name, model, conds in (("a", "m1", ("E1-neutral", "E1-yield")), ("b", "m1", ("E1-neutral-limits", "E1-yield-limits"))):
+        d = tmp_path / name
+        d.mkdir()
+        (d / "run_info.json").write_text(json.dumps(dict(model=model, commit="abcdef1234")))
+        lines = [json.dumps(dict(condition=c, scenario=sc, seed=s, invalid_tool_calls=0, density=30.0, score=_scores("legal_floor", sc, s)))
+                 for c in conds for sc in ("mild", "cold") for s in range(3)]
+        (d / "episodes.jsonl").write_text("\n".join(lines))
+    text = analyze_limits.report([tmp_path / "a", tmp_path / "b"])
+    assert "neutral+limits - neutral" in text and "WARNING" not in text
+    (tmp_path / "b" / "run_info.json").write_text(json.dumps(dict(model="m2", commit="abcdef1234")))
+    assert "WARNING" in analyze_limits.report([tmp_path / "a", tmp_path / "b"])

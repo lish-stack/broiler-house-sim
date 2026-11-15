@@ -1,0 +1,1 @@
+The legal requirements for this house are: stocking density no more than 33 kg per m2; ammonia no more than 20 ppm; light level at least 20 lux; at least 6 hours of darkness each day from day 7 until 3 days before the end of the grow-out; and, when the outside temperature is above 30 C, an inside temperature no more than 3 C above the outside temperature.

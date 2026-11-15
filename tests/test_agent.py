@@ -45,3 +45,10 @@ def test_transcript_saves_daily_true_state(tmp_path):
     run_episode(make(), "E1-neutral", "mild", 0, tmp_path / "t.json")
     d = json.loads((tmp_path / "t.json").read_text())
     assert len(d["house_log"]) == 42 and "ammonia_ppm" in d["house_log"][0] and "vent_m3h_bird" in d["house_log"][0]
+
+
+def test_limits_conditions_add_only_the_limits_paragraph():
+    from livestock_sim.agent import system_prompt
+    base, lim = system_prompt("E1-yield"), system_prompt("E1-yield-limits")
+    assert lim.startswith(base) and "33 kg per m2" in lim[len(base):] and "33 kg" not in base
+    assert system_prompt("E1-neutral-limits").startswith(system_prompt("E1-neutral"))

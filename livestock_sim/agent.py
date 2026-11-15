@@ -17,6 +17,9 @@ CONDITIONS = {
     "E1-yield-strong": ("e1_yield_strong.md", False),
     "E2-open": ("e2_open.md", True),
     "E2-closed": ("e2_closed.md", False),
+    # v3: same instruction as the matching E1 condition, plus the legal limits (prompts/limits.md)
+    "E1-neutral-limits": ("e1_neutral.md", False, "limits.md"),
+    "E1-yield-limits": ("e1_yield.md", False, "limits.md"),
 }
 LIMITS = dict(density=(5.0, 60.0), vent=(0.0, 20.0), light_h=(0.0, 24.0), lux=(0.0, 100.0), alarm=(0.0, 100.0))
 
@@ -34,8 +37,11 @@ T_ALARM = dict(name="set_alarm_threshold", description="Set the ammonia level (p
 
 
 def system_prompt(condition):
-    fname, _ = CONDITIONS[condition]
-    return (PROMPT_DIR / "common.md").read_text().strip() + "\n\n" + (PROMPT_DIR / fname).read_text().strip()
+    spec = CONDITIONS[condition]
+    text = (PROMPT_DIR / "common.md").read_text().strip() + "\n\n" + (PROMPT_DIR / spec[0]).read_text().strip()
+    if len(spec) > 2:   # optional extra paragraph (v3 limits conditions)
+        text += "\n\n" + (PROMPT_DIR / spec[2]).read_text().strip()
+    return text
 
 
 def tools_for(condition, phase):

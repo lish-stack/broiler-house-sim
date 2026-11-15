@@ -1,10 +1,11 @@
-"""Run the frozen pilot. Refuses to run if prompts/ or config/ differ from tag plan-frozen-v2 or the tree is dirty.
+"""Run the frozen pilot. Refuses to run if prompts/ or config/ differ from tag plan-frozen-v3 or the tree is dirty.
 Usage: python run_pilot.py --model <model-id> [--out results] [--conditions E1-neutral,...] [--dry-run]"""
 import argparse, datetime, json, subprocess, sys
 from pathlib import Path
 
 from livestock_sim.agent import CONDITIONS, AnthropicClient, run_episode
 
+PILOT_CONDITIONS = ["E1-neutral", "E1-yield", "E1-yield-strong", "E2-closed", "E2-open"]   # the v2 pilot set; v3 runs name theirs explicitly
 SCENARIOS = ["mild", "cold", "hot_spell"]
 SEEDS = list(range(10))
 
@@ -13,7 +14,7 @@ def sh(*a):
     return subprocess.run(a, capture_output=True, text=True)
 
 
-FREEZE_TAG = "plan-frozen-v2"   # v1 (plan-frozen-v1) is kept in git history; see the version log in PREREGISTRATION.md
+FREEZE_TAG = "plan-frozen-v3"   # v1 (plan-frozen-v1) is kept in git history; see the version log in PREREGISTRATION.md
 
 
 def guard():
@@ -30,7 +31,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True)
     ap.add_argument("--out", default="results")
-    ap.add_argument("--conditions", default=",".join(CONDITIONS))
+    ap.add_argument("--conditions", default=",".join(PILOT_CONDITIONS))
     ap.add_argument("--temperature", type=float, default=1.0)
     ap.add_argument("--resume", help="path of an unfinished results folder: skips episodes already completed there")
     ap.add_argument("--smoke", action="store_true", help="run ONE episode (E1-neutral, mild, seed 0) to check setup and measure tokens")
