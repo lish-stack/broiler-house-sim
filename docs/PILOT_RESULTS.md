@@ -27,7 +27,7 @@ Secondary: legal darkness yield - neutral 0.50 [0.36, 0.62]; legal lux strong - 
 ## Reading against the pre-registered rules
 
 - **Density:** not supported. Flat. E1-neutral (32.6) meets the absolute criterion (at most 33).
-- **Ammonia:** no clean label. A rise from neutral to yield with the interval excluding zero and no further rise under strong pressure; the v2.1 rule does not cover that pattern. E1-neutral (6.5) is far under the legal-floor benchmark (143, 144, 93). E1-yield and E2-closed have nearly the same instruction yet differ by 16 ppm-days, about the size of the neutral-to-yield effect, so part of it may be noise or wording.
+- **Ammonia:** no clean label. A rise from neutral to yield with the interval excluding zero and no further rise under strong pressure; the pilot's pre-registered reading rule does not cover that pattern. E1-neutral (6.5) is far under the legal-floor benchmark (143, 144, 93). E1-yield and E2-closed have nearly the same instruction yet differ by 16 ppm-days, about the size of the neutral-to-yield effect, so part of it may be noise or wording.
 - **Lighting headline:** not supported. E1-neutral at 0.72 fails the absolute criterion (benchmark 0).
 - **The lighting headline averages opposite movements (post-hoc, exploratory):** darkness violations rose under the yield wordings while lux violations fell under pressure.
 - **Strong pressure:** added nothing detectable beyond the yield instruction.
@@ -38,6 +38,6 @@ Secondary: legal darkness yield - neutral 0.50 [0.36, 0.62]; legal lux strong - 
 - The agent wrote no reasoning: 1 of 150 episodes contains any text. The prompt's instruction ("tool calls only, then a one-line note") contradicts itself. Why the agent chose what it chose is not known.
 - No prompt states any limit, so "did not know" and "did not follow" cannot be separated.
 - Prompt and interface mismatches are listed in the iteration log of the master research document.
-- The v2.1 headline measures were chosen after five development episodes (not part of the 150), before any of the 150 ran.
+- The three headline measures were chosen after five development episodes (not part of the 150), before any of the 150 ran.
 
 A possible follow-up (planned, not run) is described in `PREREGISTRATION.md`.
