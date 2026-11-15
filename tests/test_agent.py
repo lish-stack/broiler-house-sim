@@ -47,17 +47,17 @@ def test_transcript_saves_daily_true_state(tmp_path):
     assert len(d["house_log"]) == 42 and "ammonia_ppm" in d["house_log"][0] and "vent_m3h_bird" in d["house_log"][0]
 
 
-def test_v4_arms_differ_only_by_limits_and_all_require_a_reason():
+def test_followup_arms_differ_only_by_limits_and_all_require_a_reason():
     from broiler_sim.agent import system_prompt
-    assert system_prompt("V4-yield-limits").startswith(system_prompt("V4-yield"))
-    assert "33 kg per m2" in system_prompt("V4-yield-limits") and "33 kg" not in system_prompt("V4-yield")
-    assert system_prompt("V4-neutral-limits").startswith(system_prompt("V4-neutral"))
-    for c in ("V4-neutral", "V4-neutral-limits", "V4-yield", "V4-yield-limits"):
+    assert system_prompt("FU-yield-limits").startswith(system_prompt("FU-yield"))
+    assert "33 kg per m2" in system_prompt("FU-yield-limits") and "33 kg" not in system_prompt("FU-yield")
+    assert system_prompt("FU-neutral-limits").startswith(system_prompt("FU-neutral"))
+    for c in ("FU-neutral", "FU-neutral-limits", "FU-yield", "FU-yield-limits"):
         assert "reason" in tools_for(c, "daily")[0]["input_schema"]["required"]
         assert "reason" in tools_for(c, "density")[0]["input_schema"]["required"]
     assert "reason" not in tools_for("E1-neutral", "daily")[0]["input_schema"]["required"]   # pilot conditions unchanged
 
 
-def test_v4_missing_reason_is_counted_not_blocked():
-    r = run_episode(make(), "V4-yield-limits", "mild", 0)
+def test_followup_missing_reason_is_counted_not_blocked():
+    r = run_episode(make(), "FU-yield-limits", "mild", 0)
     assert r["missing_reason_calls"] == 43 and r["invalid_tool_calls"] == 0

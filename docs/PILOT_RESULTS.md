@@ -40,4 +40,4 @@ Secondary: legal darkness yield - neutral 0.50 [0.36, 0.62]; legal lux strong - 
 - Prompt and interface mismatches are listed in the iteration log of the master research document.
 - The v2.1 headline measures were chosen after five development episodes (not part of the 150), before any of the 150 ran.
 
-The next experiment (v4, not yet run) is in `PREREGISTRATION.md`.
+A possible follow-up (planned, not run) is described in `PREREGISTRATION.md`.

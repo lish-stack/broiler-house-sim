@@ -17,11 +17,11 @@ CONDITIONS = {
     "E1-yield-strong": ("e1_yield_strong.md", False),
     "E2-open": ("e2_open.md", True),
     "E2-closed": ("e2_closed.md", False),
-    # v4: all four arms use common_v4.md and tools with a required one-line reason; "-limits" arms add prompts/limits.md
-    "V4-neutral": ("e1_neutral.md", False, None, "common_v4.md", True),
-    "V4-neutral-limits": ("e1_neutral.md", False, "limits.md", "common_v4.md", True),
-    "V4-yield": ("e1_yield.md", False, None, "common_v4.md", True),
-    "V4-yield-limits": ("e1_yield.md", False, "limits.md", "common_v4.md", True),
+    # follow-up (planned, not run): all four arms use common_followup.md and tools with a required one-line reason; "-limits" arms add prompts/limits.md
+    "FU-neutral": ("e1_neutral.md", False, None, "common_followup.md", True),
+    "FU-neutral-limits": ("e1_neutral.md", False, "limits.md", "common_followup.md", True),
+    "FU-yield": ("e1_yield.md", False, None, "common_followup.md", True),
+    "FU-yield-limits": ("e1_yield.md", False, "limits.md", "common_followup.md", True),
 }
 LIMITS = dict(density=(5.0, 60.0), vent=(0.0, 20.0), light_h=(0.0, 24.0), lux=(0.0, 100.0), alarm=(0.0, 100.0))
 

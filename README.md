@@ -4,9 +4,10 @@ An AI agent manages a simulated 42-day broiler chicken house. Experiment 1 asks 
 
 ## Status and next steps
 
-- **Done:** the 150-episode pilot (plan v2.1). Results and limits: `docs/PILOT_RESULTS.md`. Plan and full history: `PREREGISTRATION.md`.
-- **Prepared, not run:** v4, a 120-episode told-the-limits follow-up that also captures the agent's reasons. Plan in `PREREGISTRATION.md` (v4 section).
-- **Before running v4:** outside review of the design (a poultry vet or welfare scientist on the thresholds, an evaluations methodologist on the design).
+- **Done:** the 150-episode pilot. Results and limits: `docs/PILOT_RESULTS.md`. Plan and full history: `PREREGISTRATION.md`.
+- **Naming:** the pilot is the only experiment that has run. Its plan was first frozen as "v1" (only two test episodes ever ran on it, both discarded), replaced by "v2" before any real episode, and amended by "v2.1" (analysis only) before the 150 ran. Those labels are drafts of the one pilot plan, not separate experiments. Nothing else has a version number.
+- **Planned, not run:** a 120-episode told-the-limits follow-up that also captures the agent's reasons. Plan in `PREREGISTRATION.md` (section "Planned follow-up").
+- **Before running the follow-up:** outside review of the design (a poultry vet or welfare scientist on the thresholds, an evaluations methodologist on the design).
 
 ## About this simulator
 
@@ -38,7 +39,7 @@ Score components separately; do not average them into one index (the weighting w
 Needs the `anthropic` package and an `ANTHROPIC_API_KEY` on a machine that can reach the API (the build sandbox cannot).
 `pip install anthropic pyyaml` then `git fetch --tags` then `python run_pilot.py --model <model-id>`.
 Writes `results/<timestamp>-<model>/` with `run_info.json`, `episodes.jsonl` and one full transcript per episode.
-The run guard checks against the freeze tag `plan-frozen-v4` (earlier tags `plan-frozen-v1`, `plan-frozen-v2`). The v2.1 pilot was run against `plan-frozen-v2`. To run the v4 follow-up: `python run_pilot.py --model claude-sonnet-5-5 --conditions V4-neutral,V4-neutral-limits,V4-yield,V4-yield-limits`, then `python analyze_limits.py results/<folder> --out report_v4.md`. Analysis of the pilot: `python analyze.py results/<folder> --out report.md`. Note: the code package was renamed from `livestock_sim` to `broiler_sim` on 2026-11-15; older sections of `PREREGISTRATION.md` name the old path.
+The run guard checks against the freeze tag `plan-frozen-followup` (earlier tags `plan-frozen-v1`, `plan-frozen-v2`). The 150-episode pilot was run against `plan-frozen-v2`. To run the follow-up: `python run_pilot.py --model claude-sonnet-5-5 --conditions FU-neutral,FU-neutral-limits,FU-yield,FU-yield-limits`, then `python analyze_limits.py results/<folder> --out report_followup.md`. Analysis of the pilot: `python analyze.py results/<folder> --out report.md`. Note: the code package was renamed from `livestock_sim` to `broiler_sim` on 2026-11-15; older sections of `PREREGISTRATION.md` name the old path.
 Optional before the full run: `python run_pilot.py --model <model-id> --noise-check` (5 repeats of one case, not part of the 150).
 After a run: `python analyze.py results/<folder> --out report.md` (three headline measures: density chosen, ammonia ppm-days, lighting violation days; paired differences, stratified bootstrap, exploratory only).
 Each transcript also holds the daily true simulator state (`house_log`).

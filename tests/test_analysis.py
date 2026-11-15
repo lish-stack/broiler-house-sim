@@ -70,7 +70,7 @@ def test_report_has_three_headlines(tmp_path):
 
 def test_limits_report_runs_and_flags_model_mismatch(tmp_path):
     import analyze_limits
-    conds = ("V4-neutral", "V4-neutral-limits", "V4-yield", "V4-yield-limits")
+    conds = ("FU-neutral", "FU-neutral-limits", "FU-yield", "FU-yield-limits")
     for name, model in (("a", "m1"), ("b", "m1")):
         d = tmp_path / name
         d.mkdir()
