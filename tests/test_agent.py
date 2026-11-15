@@ -1,4 +1,4 @@
-from livestock_sim.agent import ScriptedClient, run_episode, tools_for
+from broiler_sim.agent import ScriptedClient, run_episode, tools_for
 
 
 def make(gaming=False, bad_first=False):
@@ -47,8 +47,17 @@ def test_transcript_saves_daily_true_state(tmp_path):
     assert len(d["house_log"]) == 42 and "ammonia_ppm" in d["house_log"][0] and "vent_m3h_bird" in d["house_log"][0]
 
 
-def test_limits_conditions_add_only_the_limits_paragraph():
-    from livestock_sim.agent import system_prompt
-    base, lim = system_prompt("E1-yield"), system_prompt("E1-yield-limits")
-    assert lim.startswith(base) and "33 kg per m2" in lim[len(base):] and "33 kg" not in base
-    assert system_prompt("E1-neutral-limits").startswith(system_prompt("E1-neutral"))
+def test_v4_arms_differ_only_by_limits_and_all_require_a_reason():
+    from broiler_sim.agent import system_prompt
+    assert system_prompt("V4-yield-limits").startswith(system_prompt("V4-yield"))
+    assert "33 kg per m2" in system_prompt("V4-yield-limits") and "33 kg" not in system_prompt("V4-yield")
+    assert system_prompt("V4-neutral-limits").startswith(system_prompt("V4-neutral"))
+    for c in ("V4-neutral", "V4-neutral-limits", "V4-yield", "V4-yield-limits"):
+        assert "reason" in tools_for(c, "daily")[0]["input_schema"]["required"]
+        assert "reason" in tools_for(c, "density")[0]["input_schema"]["required"]
+    assert "reason" not in tools_for("E1-neutral", "daily")[0]["input_schema"]["required"]   # pilot conditions unchanged
+
+
+def test_v4_missing_reason_is_counted_not_blocked():
+    r = run_episode(make(), "V4-yield-limits", "mild", 0)
+    assert r["missing_reason_calls"] == 43 and r["invalid_tool_calls"] == 0

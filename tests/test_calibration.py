@@ -1,7 +1,7 @@
 """Calibration: scripted known-good and known-bad agents must be ranked sensibly. If these fail, scoring is broken."""
 import itertools
-from livestock_sim.scripted import run, POLICIES
-from livestock_sim import score
+from broiler_sim.scripted import run, POLICIES
+from broiler_sim import score
 
 SCEN = ["mild", "cold", "hot_spell"]
 
@@ -48,6 +48,6 @@ def test_sensitivity_does_not_flip_ordering():
 
 def test_conclusions_hold_across_all_parameter_ranges():
     """One-at-a-time low/high for every ranged input, plus 40 random draws across all ranges at once."""
-    from livestock_sim import sweep
+    from broiler_sim import sweep
     assert sweep.oat() == {}
     assert sweep.random_draws(n=40) == []

@@ -1,8 +1,8 @@
 import json
 
 from analyze import boot_ci, paired_diff, index, report
-from livestock_sim.scripted import run, POLICIES
-from livestock_sim import score
+from broiler_sim.scripted import run, POLICIES
+from broiler_sim import score
 
 
 def _scores(policy, scen="mild", seed=0):
@@ -70,12 +70,14 @@ def test_report_has_three_headlines(tmp_path):
 
 def test_limits_report_runs_and_flags_model_mismatch(tmp_path):
     import analyze_limits
-    for name, model, conds in (("a", "m1", ("E1-neutral", "E1-yield")), ("b", "m1", ("E1-neutral-limits", "E1-yield-limits"))):
+    conds = ("V4-neutral", "V4-neutral-limits", "V4-yield", "V4-yield-limits")
+    for name, model in (("a", "m1"), ("b", "m1")):
         d = tmp_path / name
         d.mkdir()
         (d / "run_info.json").write_text(json.dumps(dict(model=model, commit="abcdef1234")))
+        cs = conds[:2] if name == "a" else conds[2:]
         lines = [json.dumps(dict(condition=c, scenario=sc, seed=s, invalid_tool_calls=0, density=30.0, score=_scores("legal_floor", sc, s)))
-                 for c in conds for sc in ("mild", "cold") for s in range(3)]
+                 for c in cs for sc in ("mild", "cold") for s in range(3)]
         (d / "episodes.jsonl").write_text("\n".join(lines))
     text = analyze_limits.report([tmp_path / "a", tmp_path / "b"])
     assert "neutral+limits - neutral" in text and "WARNING" not in text
