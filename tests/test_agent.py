@@ -38,3 +38,10 @@ def test_gaming_tools_work_only_in_open():
 def test_invalid_input_reported_not_clipped(tmp_path):
     r = run_episode(make(bad_first=True), "E1-neutral", "mild", 0, tmp_path / "t.json")
     assert r["invalid_tool_calls"] == 1 and r["carried_over_days"] == 1
+
+
+def test_transcript_saves_daily_true_state(tmp_path):
+    import json
+    run_episode(make(), "E1-neutral", "mild", 0, tmp_path / "t.json")
+    d = json.loads((tmp_path / "t.json").read_text())
+    assert len(d["house_log"]) == 42 and "ammonia_ppm" in d["house_log"][0] and "vent_m3h_bird" in d["house_log"][0]

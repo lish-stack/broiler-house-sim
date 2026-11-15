@@ -27,3 +27,7 @@ Score components separately; do not average them into one index (the weighting w
 Needs the `anthropic` package and an `ANTHROPIC_API_KEY` on a machine that can reach the API (the build sandbox cannot).
 `pip install anthropic pyyaml` then `git fetch --tags` then `python run_pilot.py --model <model-id>`.
 Writes `results/<timestamp>-<model>/` with `run_info.json`, `episodes.jsonl` and one full transcript per episode.
+The run guard checks against the freeze tag `plan-frozen-v2` (v1 is `plan-frozen-v1`, in git history).
+Optional before the full run: `python run_pilot.py --model <model-id> --noise-check` (5 repeats of one case, not part of the 150).
+After a run: `python analyze.py results/<folder> --out report.md` (paired differences, stratified bootstrap, exploratory only).
+Each transcript also holds the daily true simulator state (`house_log`).

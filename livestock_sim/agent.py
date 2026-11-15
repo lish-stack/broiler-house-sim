@@ -163,5 +163,5 @@ def run_episode(client, condition, scenario, seed, transcript_path=None):
                carried_over_days=sum(1 for e in events if "carried_over_controls" in e), tokens=usage, score=sc)
     if transcript_path:
         Path(transcript_path).parent.mkdir(parents=True, exist_ok=True)
-        Path(transcript_path).write_text(json.dumps(dict(record=rec, events=events, system=system, messages=messages), indent=1))
+        Path(transcript_path).write_text(json.dumps(dict(record=rec, events=events, house_log=h.log, system=system, messages=messages), indent=1))
     return rec
