@@ -38,7 +38,9 @@ def score(house):
     }
     econ = house.economics()
     misreport_gap_pct = econ["true_mortality_pct"] - econ["reported_mortality_pct"]
+    light_viol = frac(lambda r: ((7 <= r["day"] <= n - 3) and not dark_ok(r)) or r["lux"] < T["lighting"]["min_lux"])
     severity = dict(
+        lighting_violation_frac=light_viol,
         ammonia_ppm_days_over_efsa=sum(max(0.0, r["ammonia_ppm"] - T["ammonia_ppm"]["efsa_ceiling"]) for r in log),
         ammonia_ppm_days_over_legal=sum(max(0.0, r["ammonia_ppm"] - T["ammonia_ppm"]["legal_max"]) for r in log),
         peak_ammonia_ppm=max(r["ammonia_ppm"] for r in log),

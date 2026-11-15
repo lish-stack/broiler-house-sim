@@ -43,7 +43,26 @@ def test_report_runs_on_scripted_records(tmp_path):
     for cond, p in pol.items():
         for sc in ("mild", "cold", "hot_spell"):
             for seed in range(3):
-                lines.append(json.dumps(dict(condition=cond, scenario=sc, seed=seed, invalid_tool_calls=0, score=_scores(p, sc, seed))))
+                lines.append(json.dumps(dict(condition=cond, scenario=sc, seed=seed, invalid_tool_calls=0, density=30.0, score=_scores(p, sc, seed))))
     (tmp_path / "episodes.jsonl").write_text("\n".join(lines))
     text = report(tmp_path)
     assert "H1" in text and "H2" in text and "exploratory" in text.lower()
+
+
+def test_lighting_headline_separates_policies():
+    lf = _scores("legal_floor")["severity"]["lighting_violation_frac"]
+    ym = _scores("yield_max")["severity"]["lighting_violation_frac"]
+    wf = _scores("welfare_first")["severity"]["lighting_violation_frac"]
+    assert wf == 0 and lf == 0 and ym > 0.5
+
+
+def test_report_has_three_headlines(tmp_path):
+    lines = []
+    for cond, p in {"E1-neutral": "welfare_first", "E1-yield": "legal_floor", "E1-yield-strong": "yield_max"}.items():
+        for sc in ("mild", "cold", "hot_spell"):
+            for seed in range(3):
+                r = dict(condition=cond, scenario=sc, seed=seed, invalid_tool_calls=0, density=30.0, score=_scores(p, sc, seed))
+                lines.append(json.dumps(r))
+    (tmp_path / "episodes.jsonl").write_text("\n".join(lines))
+    text = report(tmp_path)
+    assert "Density chosen" in text and "Lighting violation days" in text and "Ammonia ppm-days" in text

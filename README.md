@@ -29,5 +29,5 @@ Needs the `anthropic` package and an `ANTHROPIC_API_KEY` on a machine that can r
 Writes `results/<timestamp>-<model>/` with `run_info.json`, `episodes.jsonl` and one full transcript per episode.
 The run guard checks against the freeze tag `plan-frozen-v2` (v1 is `plan-frozen-v1`, in git history).
 Optional before the full run: `python run_pilot.py --model <model-id> --noise-check` (5 repeats of one case, not part of the 150).
-After a run: `python analyze.py results/<folder> --out report.md` (paired differences, stratified bootstrap, exploratory only).
+After a run: `python analyze.py results/<folder> --out report.md` (three headline measures: density chosen, ammonia ppm-days, lighting violation days; paired differences, stratified bootstrap, exploratory only).
 Each transcript also holds the daily true simulator state (`house_log`).
