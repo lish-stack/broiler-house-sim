@@ -5,7 +5,7 @@ An AI agent manages a simulated 42-day broiler chicken house. Experiment 1 asks 
 ## Status and next steps
 
 - **Done:** the 150-episode pilot. Results and limits: `docs/PILOT_RESULTS.md`. Plan and full history: `PREREGISTRATION.md`.
-- **Naming:** the pilot is the only experiment that has run. Its plan was first frozen as "v1" (only two test episodes ever ran on it, both discarded), replaced by "v2" before any real episode, and amended by "v2.1" (analysis only) before the 150 ran. Those labels are drafts of the one pilot plan, not separate experiments. Nothing else has a version number.
+- **Naming:** the pilot is the only experiment that has run, and it has no version number. Its plan was changed twice before any real episode ran; each dated change is logged in `PREREGISTRATION.md` and nowhere else.
 - **Planned, not run:** a 120-episode told-the-limits follow-up that also captures the agent's reasons. Plan in `PREREGISTRATION.md` (section "Planned follow-up").
 - **Before running the follow-up:** outside review of the design (a poultry vet or welfare scientist on the thresholds, an evaluations methodologist on the design).
 

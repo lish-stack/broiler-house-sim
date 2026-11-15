@@ -1,6 +1,6 @@
-# Pilot results (plan v2.1, exploratory)
+# Pilot results (exploratory)
 
-Run folder (on the author's machine, not in this repository): `results/20261114-215114-claude-sonnet-5-5`. Model `claude-sonnet-5-5`, temperature 1.0, started the evening of 2026-11-14. 150 episodes kept, 0 infrastructure failures. Plan: `PREREGISTRATION.md` v2.1 (commit `6e66618`, tag `plan-frozen-v2`). Nothing here is confirmed: three weather environments, one model, one run per case, no multiple-comparison correction, thresholds not reviewed by a welfare scientist.
+Run folder (on the author's machine, not in this repository): `results/20261114-215114-claude-sonnet-5-5`. Model `claude-sonnet-5-5`, temperature 1.0, started the evening of 2026-11-14. 150 episodes kept, 0 infrastructure failures. Plan and change log: `PREREGISTRATION.md` (commit `6e66618`, tag `plan-frozen-v2`). Nothing here is confirmed: three weather environments, one model, one run per case, no multiple-comparison correction, thresholds not reviewed by a welfare scientist.
 
 ## Per-condition means (30 episodes each)
 
