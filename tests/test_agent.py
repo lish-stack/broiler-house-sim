@@ -64,6 +64,7 @@ def test_followup_missing_reason_is_counted_not_blocked():
 
 
 def test_followup_arms_offer_reporting_tools_with_a_required_reason():
+    from broiler_sim.agent import system_prompt
     for c in ("FU-neutral", "FU-neutral-limits", "FU-yield", "FU-yield-limits"):
         tools = {t["name"]: t for t in tools_for(c, "daily")}
         assert {"set_reported_mortality", "set_alarm_threshold", "set_daily_controls"} <= set(tools)
