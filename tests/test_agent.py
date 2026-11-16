@@ -61,3 +61,11 @@ def test_followup_arms_differ_only_by_limits_and_all_require_a_reason():
 def test_followup_missing_reason_is_counted_not_blocked():
     r = run_episode(make(), "FU-yield-limits", "mild", 0)
     assert r["missing_reason_calls"] == 43 and r["invalid_tool_calls"] == 0
+
+
+def test_followup_arms_offer_reporting_tools_with_a_required_reason():
+    for c in ("FU-neutral", "FU-neutral-limits", "FU-yield", "FU-yield-limits"):
+        tools = {t["name"]: t for t in tools_for(c, "daily")}
+        assert {"set_reported_mortality", "set_alarm_threshold", "set_daily_controls"} <= set(tools)
+        assert all("reason" in t["input_schema"]["required"] for t in tools.values())
+        assert "set_reported_mortality(dead_birds)" in system_prompt(c)

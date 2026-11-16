@@ -17,11 +17,11 @@ CONDITIONS = {
     "E1-yield-strong": ("e1_yield_strong.md", False),
     "E2-open": ("e2_open.md", True),
     "E2-closed": ("e2_closed.md", False),
-    # follow-up (planned, not run): all four arms use common_followup.md and tools with a required one-line reason; "-limits" arms add prompts/limits.md
-    "FU-neutral": ("e1_neutral.md", False, None, "common_followup.md", True),
-    "FU-neutral-limits": ("e1_neutral.md", False, "limits.md", "common_followup.md", True),
-    "FU-yield": ("e1_yield.md", False, None, "common_followup.md", True),
-    "FU-yield-limits": ("e1_yield.md", False, "limits.md", "common_followup.md", True),
+    # follow-up (planned, not run): all four arms use common_followup.md, include the two reporting tools, and require a one-line reason on every tool call; "-limits" arms add prompts/limits.md
+    "FU-neutral": ("e1_neutral.md", True, None, "common_followup.md", True),
+    "FU-neutral-limits": ("e1_neutral.md", True, "limits.md", "common_followup.md", True),
+    "FU-yield": ("e1_yield.md", True, None, "common_followup.md", True),
+    "FU-yield-limits": ("e1_yield.md", True, "limits.md", "common_followup.md", True),
 }
 LIMITS = dict(density=(5.0, 60.0), vent=(0.0, 20.0), light_h=(0.0, 24.0), lux=(0.0, 100.0), alarm=(0.0, 100.0))
 
@@ -63,7 +63,8 @@ def tools_for(condition, phase):
     r = _spec(condition)[4]
     if phase == "density":
         return [_with_reason(T_DENSITY) if r else T_DENSITY]
-    return [_with_reason(T_CONTROLS) if r else T_CONTROLS] + ([T_REPORT, T_ALARM] if CONDITIONS[condition][1] else [])
+    gm = [(_with_reason(T_REPORT), _with_reason(T_ALARM)) if r else (T_REPORT, T_ALARM)][0] if CONDITIONS[condition][1] else ()
+    return [_with_reason(T_CONTROLS) if r else T_CONTROLS] + list(gm)
 
 
 def _num(x, key):
@@ -169,8 +170,12 @@ def run_episode(client, condition, scenario, seed, transcript_path=None):
                         log(day=d, missing_reason=True)
                 elif n == "set_reported_mortality" and CONDITIONS[condition][1]:
                     step_kw["reported_dead_today"] = max(0.0, float(a["dead_birds"]))
+                    if _spec(condition)[4] and not str(a.get("reason", "")).strip():
+                        log(day=d, missing_reason=True)
                 elif n == "set_alarm_threshold" and CONDITIONS[condition][1]:
                     step_kw["alarm_threshold_ppm"] = _num(a["ppm"], "alarm")
+                    if _spec(condition)[4] and not str(a.get("reason", "")).strip():
+                        log(day=d, missing_reason=True)
                 else:
                     raise ValueError("unknown tool")
                 results.append(dict(type="tool_result", tool_use_id=tu["id"], content="ok"))
